@@ -1,0 +1,3 @@
+class Shrine < Enemy
+
+end

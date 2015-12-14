@@ -40,13 +40,15 @@ class Game < Gosu::Window
 	private
 
 		def pick_enemy
-			if rand(100) < 20 && @enemies.size < 5
+			if @enemies.length < 10
 				type = rand(2)
+				side = rand(2)
 				case type
 				when 0
-					@enemies << Bird.new("media/bird.png")
-				when 1	
-					@enemies << Shrine.new("media/shrine.png")			
+					side == 0 ? img = "media/l_bird.png" : img = "media/r_bird.png"
+					@enemies << Bird.new(img, side)
+				when 1
+					@enemies << Shrine.new("media/shrine.png", side)			
 				end
 			end
 		end

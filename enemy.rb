@@ -3,6 +3,8 @@ require 'fastimage'
 
 class Enemy
 
+	attr_reader :x, :y
+
 	def initialize(img, side)
 		@y = -100
 		@img = Gosu::Image.new(img)

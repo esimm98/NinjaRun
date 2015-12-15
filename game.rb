@@ -40,7 +40,7 @@ class Game < Gosu::Window
 	private
 
 		def pick_enemy
-			if @enemies.length < 10
+			if @enemies.length < 20
 				@type = rand(3)
 				@side = rand(2)
 				case @type

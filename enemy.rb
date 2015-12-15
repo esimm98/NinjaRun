@@ -8,6 +8,7 @@ class Enemy
 		@img = Gosu::Image.new(img)
 		@width, @height = FastImage.size(img)
 		@side = side
+		set_side
 	end
 
 	def move
@@ -15,14 +16,17 @@ class Enemy
 	end
 
 	def draw
-		set_side
 		@img.draw(@x, @y, ZOrder::Enemies)
 	end
 
 	private
 
+		def left
+			@side == 0
+		end
+
 		def set_side
-			@side == 0 ? @x = 50 : @x = 400 - @width
+			left ? @x = 50 : @x = 400 - @width
 		end
 
 end

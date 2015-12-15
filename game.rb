@@ -22,6 +22,13 @@ class Game < Gosu::Window
 	end
 
 	def update
+		add_walls if @walls.size <= 4
+		@walls.each do |wall|
+			wall.move 
+		end
+		@walls.reject! do |wall|
+			true if wall.y > 700
+		end
 		pick_enemy
 		@enemies.each { |enemy| enemy.move }
 	end
@@ -38,6 +45,11 @@ class Game < Gosu::Window
 	end
 
 	private
+
+		def add_walls
+			@walls << Wall.new("l_wall.png", 0, -700)
+			@walls << Wall.new("r_wall.png", 400, -700)
+		end
 
 		def pick_enemy
 			if @enemies.length < 20

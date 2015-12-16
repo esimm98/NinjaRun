@@ -5,7 +5,7 @@ class Enemy
 	attr_reader :x, :y, :semi_x, :semi_y, :mid_x, :mid_y
 
 	def initialize(img, side, vel = 3)
-		@y = -50
+		@y = -100
 		@img = Gosu::Image.new(img)
 		@width, @height = FastImage.size(img)
 		@side = side

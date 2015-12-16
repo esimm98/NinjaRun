@@ -1,16 +1,14 @@
 class Bird < Enemy
 
-	TILE_WIDTH = 54
-	TILE_HEIGHT = 56
-
 	def initialize(img, side)
-		@y = -100
+		@y = -50
+		@width = 54
+		@height = 56
 		@side = side
-		@animation = Gosu::Image::load_tiles(img, TILE_WIDTH, TILE_HEIGHT)
-		@width = TILE_WIDTH
+		@animation = Gosu::Image::load_tiles(img, @width, @height)
 		set_side
-		@move_start = rand(5..10) * 10
-		@x_vel = rand(10..20) / 10.0
+		@y_vel = 3
+		@x_vel = 2
 	end
 
 	def draw
@@ -20,7 +18,7 @@ class Bird < Enemy
 
 	def move
 		super
-		if @y >= @move_start
+		if @y >= 70
 			left ? @x += @x_vel : @x -= @x_vel
 		end
 	end

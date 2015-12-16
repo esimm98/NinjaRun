@@ -3,5 +3,6 @@ module ZOrder
 	Walls = 1
 	Enemies = 2
 	Player = 3
-	UI = 4
+	Shield = 4
+	UI = 5
 end

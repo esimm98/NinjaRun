@@ -1,20 +1,27 @@
 require_relative "zorder"
-require 'fastimage'
 
 class Enemy
 
-	attr_reader :x, :y
+	attr_reader :x, :y, :semi_x, :semi_y, :mid_x, :mid_y
 
-	def initialize(img, side)
-		@y = -100
+	def initialize(img, side, vel = 3)
+		@y = -50
 		@img = Gosu::Image.new(img)
 		@width, @height = FastImage.size(img)
 		@side = side
 		set_side
+		@y_vel = vel
+	end
+
+	def measure
+		@semi_x = @width / 2.0
+		@semi_y = @height / 2.0
+		@mid_x = @x + semi_x
+		@mid_y = @y + semi_y
 	end
 
 	def move
-		@y += 2
+		@y += @y_vel
 	end
 
 	def draw

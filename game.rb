@@ -12,25 +12,32 @@ class Game < Gosu::Window
 	def initialize
 		super 450, 700
 		self.caption = "Ninja Run"
+		@game_over = false
 
 		@background = Gosu::Image.new("media/background.png")
 		@walls = [Wall.new("l_wall.png", 0), Wall.new("r_wall.png", 400)]
 		@enemies = []
 
-		@player = Player.new
-		@player.warp(400, 550)
+		@player = Player.new(370, 550)
 	end
 
 	def update
+		@player.measure
+
 		add_walls if @walls.size <= 4
-		@walls.each do |wall|
-			wall.move 
-		end
-		@walls.reject! do |wall|
-			true if wall.y > 700
-		end
+		@walls.each { |wall| wall.move }
+		@walls.reject! { |wall| true if wall.y > 700 }
+
 		pick_enemy
-		@enemies.each { |enemy| enemy.move }
+		@enemies.each do |enemy|
+			enemy.move
+			enemy.measure
+		end
+		@enemies.reject! do |enemy|
+			true if enemy.y >= 750
+		end
+
+		@player.collide(@enemies)
 	end
 
 	def draw
@@ -52,7 +59,7 @@ class Game < Gosu::Window
 		end
 
 		def pick_enemy
-			if @enemies.length < 20
+			if @enemies.length < 5
 				@type = rand(3)
 				@side = rand(2)
 				case @type
@@ -60,10 +67,11 @@ class Game < Gosu::Window
 					pick_side_image("bird.png")
 					@enemies << Bird.new(@img, @side)
 				when 1
-					@enemies << Shrine.new("media/shrine.png", @side)
+					pick_side_image("shrine.png")
+					@enemies << Shrine.new(@img, @side)
 				when 2
 					pick_side_image("enemy.png")
-					@enemies << Enemy.new(@img, @side)
+					@enemies << Enemy.new(@img, @side, rand(35..40) / 10.0)
 				end
 			end
 		end

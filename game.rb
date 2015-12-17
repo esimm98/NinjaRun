@@ -1,9 +1,10 @@
 require_relative "player"
 require_relative "wall"
-require_relative "shield"
+require_relative "powerup"
 require_relative "enemy"
 require_relative "bird"
 require_relative "shrine"
+require_relative "zorder"
 require 'gosu'
 require 'fastimage'
 
@@ -12,7 +13,6 @@ class Game < Gosu::Window
 	def initialize
 		super 450, 700
 		self.caption = "Ninja Run"
-		@game_over = false
 		$score = 0
 		@score_back = Gosu::Image.new("media/score_back.jpg")
 
@@ -21,7 +21,10 @@ class Game < Gosu::Window
 		@enemies = []
 
 		@player = Player.new(370, 550)
+		@player.lives = 3
 		$jump = false
+
+		@powerup = Powerup.new
 
 		@font = Gosu::Font.new(40)
 	end
@@ -40,6 +43,7 @@ class Game < Gosu::Window
 			end
 		end
 
+		@enemy_limit = $score / 1000 + 2
 		pick_enemy
 		@enemies.each do |enemy|
 			enemy.move
@@ -49,7 +53,12 @@ class Game < Gosu::Window
 			true if enemy.y >= 750
 		end
 
-		@player.collide(@enemies)
+		@powerup.move
+		@powerup.measure
+		@powerup.reset if @powerup.y >= 750
+
+		@player.collide_enemy(@enemies)
+		@player.pickup(@powerup)
 		$score += 1
 	end
 
@@ -58,7 +67,9 @@ class Game < Gosu::Window
 		if !game_over?
 			@walls.each { |wall| wall.draw }
 			@enemies.each { |enemy| enemy.draw }
+			@powerup.draw
 			@player.draw
+
 			@font.draw("Lives:", 100, 650, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
 			for n in 1..@player.lives
 				img = Gosu::Image.new("media/life.png")
@@ -74,6 +85,9 @@ class Game < Gosu::Window
 
 	def button_down(id)
 		close if id == Gosu::KbEscape
+		if id == Gosu::KbReturn && game_over?
+			initialize
+		end
 	end
 
 	private
@@ -88,7 +102,7 @@ class Game < Gosu::Window
 		end
 
 		def pick_enemy
-			if @enemies.length < 2
+			if @enemies.length < @enemy_limit
 				@type = rand(3)
 				@side = rand(2)
 				case @type
@@ -100,7 +114,7 @@ class Game < Gosu::Window
 					@enemies << Shrine.new(@img, @side)
 				when 2
 					pick_side_image("enemy.png")
-					@enemies << Enemy.new(@img, @side, rand(35..40) / 10.0)
+					@enemies << Enemy.new(@img, @side, rand(45..50) / 10.0)
 				end
 			end
 		end

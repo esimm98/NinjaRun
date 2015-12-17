@@ -1,7 +1,7 @@
 class Bird < Enemy
 
 	def initialize(img, side)
-		@y = -100
+		@y = rand(-100..-50)
 		@width = 54
 		@height = 56
 		@side = side

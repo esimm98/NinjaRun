@@ -5,7 +5,7 @@ class Enemy
 	attr_reader :x, :y, :semi_x, :semi_y, :mid_x, :mid_y
 
 	def initialize(img, side, vel = 3)
-		@y = -100
+		@y = rand(-10..-5) * 10
 		@img = Gosu::Image.new(img)
 		@width, @height = FastImage.size(img)
 		@side = side
@@ -16,8 +16,8 @@ class Enemy
 	def measure
 		@semi_x = @width / 2.0
 		@semi_y = @height / 2.0
-		@mid_x = @x + semi_x
-		@mid_y = @y + semi_y
+		@mid_x = @x + @semi_x
+		@mid_y = @y + @semi_y
 	end
 
 	def move
